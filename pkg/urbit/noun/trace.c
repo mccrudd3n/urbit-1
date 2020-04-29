@@ -278,7 +278,14 @@ void
 u3t_trace_open(c3_c* dir_c)
 {
   c3_c fil_c[2048];
-  snprintf(fil_c, 2048, "%s/.urb/put/trace", dir_c);
+  c3_i len_i;
+  len_i = snprintf(fil_c, 2048, "%s/.urb/put/trace", dir_c);
+
+  if (len_i < 0) {
+    abort();
+  } else if (len_i >= 8192) {
+    // Truncated
+  }
 
   struct stat st;
   if ( -1 == stat(fil_c, &st) ) {
@@ -286,7 +293,13 @@ u3t_trace_open(c3_c* dir_c)
   }
 
   c3_c lif_c[2048];
-  snprintf(lif_c, 2048, "%s/%d.json", fil_c, u3_Host.tra_u.fun_w);
+  len_i = snprintf(lif_c, 2048, "%s/%d.json", fil_c, u3_Host.tra_u.fun_w);
+
+  if (len_i < 0) {
+    abort();
+  } else if (len_i >= 8192) {
+    // Truncated
+  }
 
   u3_Host.tra_u.fil_u = fopen(lif_c, "w");
   u3_Host.tra_u.nid_w = (int)getpid();
